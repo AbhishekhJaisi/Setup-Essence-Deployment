@@ -334,7 +334,7 @@ function EventsPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 bg-white/[0.05] border border-white/[0.05] rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-1  md:grid-cols-2  lg:grid-cols-3 gap-2 bg-white/[0.05] border border-white/[0.05] rounded-2xl overflow-hidden">
             {selectedEvents.map((event) => {
               const userId = localStorage.getItem("userId");
               const isApplied = appliedEvents.includes(event.id);
@@ -364,7 +364,7 @@ function EventsPage() {
               return (
                 <div
                   key={event.id}
-                  className="bg-[#0e0e14] hover:bg-[#12121a] transition-colors flex flex-col group"
+                  className="bg-[#0e0e14] rounded-2xl shadow shadow-purple-900 hover:bg-[#12121a] transition-colors flex flex-col group"
                 >
                   {/* Image */}
                   <div

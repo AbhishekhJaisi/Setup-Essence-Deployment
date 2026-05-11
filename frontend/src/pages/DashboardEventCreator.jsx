@@ -169,7 +169,7 @@ function DashboardEventCreator() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-[#e8e3d8] relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#111118]  text-[#e8e3d8] relative overflow-x-hidden">
       {/* Ambient glows */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute top-0 left-0 w-[700px] h-[500px] rounded-full bg-violet-600/10 blur-[140px] -translate-x-1/3 -translate-y-1/4" />
@@ -230,7 +230,7 @@ function DashboardEventCreator() {
           {/* Upcoming Events */}
           <section>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-[9px] tracking-[0.12em] uppercase text-white/25">
+              <span className="text-[9px] tracking-[0.12em] uppercase ">
                 Upcoming Events
               </span>
               <div className="flex-1 h-px bg-white/[0.06]" />
@@ -254,7 +254,7 @@ function DashboardEventCreator() {
                       <tr>
                         <td
                           colSpan={5}
-                          className="py-10 text-center text-[12px] text-white/20"
+                          className="py-10 text-center text-[12px] "
                         >
                           {error}
                         </td>
@@ -263,7 +263,7 @@ function DashboardEventCreator() {
                       <tr>
                         <td
                           colSpan={5}
-                          className="py-10 text-center text-[12px] text-white/20"
+                          className="py-10 text-center text-[12px] "
                         >
                           No upcoming events.
                         </td>
@@ -275,19 +275,19 @@ function DashboardEventCreator() {
                           className="hover:bg-white/[0.02] transition-colors group"
                         >
                           <td
-                            className={`${tdClass} font-medium text-[#f0ece3]/80 max-w-[140px] truncate`}
+                            className={`${tdClass} font-medium  max-w-[140px] truncate`}
                           >
                             {event.title}
                           </td>
                           <td className={tdClass}>{fmt(event.eventDate)}</td>
-                          <td className={`${tdClass} text-white/35`}>
+                          <td className={`${tdClass} `}>
                             {event.registrationDeadline
                               ? fmt(event.registrationDeadline)
                               : "—"}
                           </td>
                           <td className="px-5 py-3.5">
                             <span
-                              className={`text-[9px] tracking-[0.08em] uppercase px-2 py-1 rounded-full border ${STATUS_COLORS[event.eventStatus] ?? "text-white/30 bg-white/[0.04] border-white/10"}`}
+                              className={`text-[9px] tracking-[0.08em] uppercase px-2 py-1 rounded-full border ${STATUS_COLORS[event.eventStatus] ?? " bg-white/[0.04] border-white/10"}`}
                             >
                               {event.eventStatus}
                             </span>
@@ -316,7 +316,7 @@ function DashboardEventCreator() {
           {/* Application Overview */}
           <section>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-[9px] tracking-[0.12em] uppercase text-white/25">
+              <span className="text-[9px] tracking-[0.12em] uppercase ">
                 Application Overview
               </span>
               <div className="flex-1 h-px bg-white/[0.06]" />
@@ -339,7 +339,7 @@ function DashboardEventCreator() {
                       <tr>
                         <td
                           colSpan={4}
-                          className="py-10 text-center text-[12px] text-white/20"
+                          className="py-10 text-center text-[12px] "
                         >
                           No events to manage.
                         </td>
@@ -351,16 +351,18 @@ function DashboardEventCreator() {
                           className="hover:bg-white/[0.02] transition-colors"
                         >
                           <td
-                            className={`${tdClass} font-medium text-[#f0ece3]/80 max-w-[140px] truncate`}
+                            className={`${tdClass} font-medium  max-w-[140px] truncate`}
                           >
                             {event.title}
                           </td>
                           <td className={`${tdClass} tabular-nums`}>
-                            <span className="text-white/50">
+                            <span className="text-white">
                               {event.capacityRemaining}
                             </span>
-                            <span className="text-white/20 mx-1">/</span>
-                            <span>{event.capacityTotal}</span>
+                            <span className="text-white mx-1">/</span>
+                            <span className="text-white">
+                              {event.capacityTotal}
+                            </span>
                           </td>
                           <td className="px-5 py-3.5 min-w-[120px]">
                             <FillBar

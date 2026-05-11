@@ -119,7 +119,7 @@ function DashboardUser() {
   const tdClass = "px-5 py-3.5 text-[12px] text-white/65";
 
   return (
-    <div className="min-h-screen bg-[#111118] text-[#e8e3d8] relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#111118]  text-[#e8e3d8] relative overflow-x-hidden">
       {/* Ambient glows */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute top-0 left-0 w-[700px] h-[500px] rounded-full bg-violet-600/10 blur-[140px] -translate-x-1/3 -translate-y-1/4" />
