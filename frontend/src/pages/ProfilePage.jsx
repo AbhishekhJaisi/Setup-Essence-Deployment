@@ -48,9 +48,8 @@ function ProfilePage() {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`${apiUrl}/auth/profile`, {
+        const res = await fetch(`${apiUrl}/api/auth/profile`, {
           method: "GET",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -58,6 +57,7 @@ function ProfilePage() {
         });
         const data = await res.json();
         setUserData(data.data.user);
+        console.log(data);
       } catch (err) {
         console.error("Error fetching user data:", err);
       }
