@@ -25,6 +25,7 @@ function EventsPage() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const isCreator = role === "creator";
   const isUser = role === "user";
+  const navigate = useNavigate();
 
   const toggleCard = (id) => setExpandedId((prev) => (prev === id ? null : id));
 
@@ -36,6 +37,10 @@ function EventsPage() {
       minute: "2-digit",
     });
   }
+
+  useEffect(() => {
+    navigate;
+  });
 
   async function handleStatus(regId, status) {
     try {
