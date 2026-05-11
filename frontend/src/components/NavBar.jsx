@@ -114,7 +114,7 @@ function NavBar() {
 
   return (
     <>
-      <nav className="bg-[#0e0e14] border border-white/[0.07] rounded-[14px] px-4 h-[60px] flex items-center gap-4">
+      <nav className="bg-[#0e0e14] border border-white/[0.07] px-4 h-[60px] flex items-center gap-4">
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className="font-serif font-light text-[18px] text-[#f0ece3]">
             Club Management

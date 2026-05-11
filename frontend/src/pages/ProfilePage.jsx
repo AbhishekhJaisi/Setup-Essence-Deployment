@@ -48,9 +48,8 @@ function ProfilePage() {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`${apiUrl}/auth/profile`, {
+        const res = await fetch(`${apiUrl}/api/auth/profile`, {
           method: "GET",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -58,6 +57,7 @@ function ProfilePage() {
         });
         const data = await res.json();
         setUserData(data.data.user);
+        console.log(data);
       } catch (err) {
         console.error("Error fetching user data:", err);
       }
@@ -82,7 +82,7 @@ function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-[#e8e3d8] relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#111118] text-[#e8e3d8] relative overflow-x-hidden">
       {/* Ambient glows */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute top-0 left-0 w-[700px] h-[500px] rounded-full bg-violet-600/10 blur-[140px] -translate-x-1/3 -translate-y-1/4" />
@@ -96,10 +96,10 @@ function ProfilePage() {
             E
           </div>
           <div>
-            <h1 className="font-serif font-light text-[18px] text-[#f0ece3] leading-none">
+            <h1 className="font-serif font-light text-[18px]  leading-none">
               Eventful
             </h1>
-            <p className="text-[9px] tracking-[0.1em] uppercase text-white/25 mt-0.5">
+            <p className="text-[9px] tracking-[0.1em] uppercase  mt-0.5">
               Your Profile
             </p>
           </div>
@@ -126,11 +126,11 @@ function ProfilePage() {
         {/* Section label */}
         <div className="flex items-center gap-2 mb-3">
           <div className="w-5 h-px bg-amber-400/50" />
-          <span className="text-[9px] tracking-[0.14em] uppercase text-amber-400/70">
+          <span className="text-[9px] tracking-[0.14em] uppercase ">
             Account Overview
           </span>
         </div>
-        <h2 className="font-serif font-light text-4xl text-[#f0ece3] mb-8 leading-tight">
+        <h2 className="font-serif font-light text-4xl  mb-8 leading-tight">
           Welcome back,{" "}
           <span className="italic text-violet-400">
             {userData.username || "—"}
@@ -146,10 +146,10 @@ function ProfilePage() {
               <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0e0e14]" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-serif font-light text-xl text-[#f0ece3] truncate">
+              <p className="font-serif font-light text-xl  truncate">
                 {userData.username || "—"}
               </p>
-              <p className="text-[12px] text-white/35 font-mono mt-1 truncate">
+              <p className="text-[12px]  font-mono mt-1 truncate">
                 {userData.email || "—"}
               </p>
             </div>
@@ -178,7 +178,7 @@ function ProfilePage() {
               },
             ].map(({ label, value }) => (
               <div key={label} className="px-5 py-4">
-                <p className="text-[9px] tracking-[0.1em] uppercase text-white/25 mb-1">
+                <p className="text-[9px] tracking-[0.1em] uppercase  mb-1">
                   {label}
                 </p>
                 <p className="font-serif font-light text-[26px] text-[#f0ece3] leading-none">
@@ -191,7 +191,7 @@ function ProfilePage() {
 
         {/* Fields section label */}
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-[9px] tracking-[0.12em] uppercase text-white/25">
+          <span className="text-[9px] tracking-[0.12em] uppercase ">
             Account Details
           </span>
           <div className="flex-1 h-px bg-white/[0.06]" />
@@ -208,14 +208,14 @@ function ProfilePage() {
             >
               <div className="w-8 h-8 rounded-[8px] bg-white/[0.04] border border-white/[0.07] flex items-center justify-center flex-shrink-0">
                 {/* swap for actual SVG icons or an icon font */}
-                <span className="text-white/30 text-xs">⊙</span>
+                <span className=" text-xs">⊙</span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[9px] tracking-[0.1em] uppercase text-white/25 mb-0.5">
+                <p className="text-[9px] tracking-[0.1em] uppercase mb-0.5">
                   {label}
                 </p>
                 <p className="text-[13px] text-white/75 truncate">
-                  {value || <span className="text-white/20">Not set</span>}
+                  {value || <span className="text-white/50">Not set</span>}
                 </p>
               </div>
             </div>
@@ -225,8 +225,8 @@ function ProfilePage() {
         {/* Danger zone */}
         <div className="bg-[#0e0e14] border border-white/[0.06] rounded-2xl px-5 py-4 flex items-center justify-between">
           <div>
-            <p className="text-[13px] text-white/60 mb-0.5">Danger zone</p>
-            <p className="text-[11px] text-white/25">
+            <p className="text-[13px] text-white/90 mb-0.5">Delete Account</p>
+            <p className="text-[11px] text-white/50">
               Permanently delete your account and all data
             </p>
           </div>

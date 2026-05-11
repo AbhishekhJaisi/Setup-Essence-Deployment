@@ -44,7 +44,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#111118] flex items-center justify-center px-4 relative overflow-hidden">
       {/* Ambient glows */}
       <div className="pointer-events-none fixed inset-0">
         <div className="absolute top-0 left-0 w-[600px] h-[500px] rounded-full bg-purple-600/10 blur-[120px] -translate-x-1/3 -translate-y-1/3" />

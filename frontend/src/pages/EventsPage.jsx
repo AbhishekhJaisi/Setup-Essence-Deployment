@@ -3,6 +3,7 @@ import CreateEventForm from "../components/CreateEventForm";
 import ApplicationForm from "../components/ApplicationForm";
 import EditEvent from "../components/EditEvent";
 import ApplicantsList from "../components/ApplicantList";
+import { useNavigate } from "react-router-dom";
 
 function EventsPage() {
   const [eventsList, setEventsList] = useState([]);
@@ -220,7 +221,7 @@ function EventsPage() {
   const totalPages = Math.ceil(visibleEvents.length / itemsPerPage);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-[#e8e3d8] relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#111118] text-[#e8e3d8] relative overflow-x-hidden">
       {/* Ambient glows */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute top-0 left-0 w-[700px] h-[500px] rounded-full bg-violet-600/10 blur-[140px] -translate-x-1/3 -translate-y-1/4" />
@@ -333,7 +334,7 @@ function EventsPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/[0.05] border border-white/[0.05] rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 bg-white/[0.05] border border-white/[0.05] rounded-2xl overflow-hidden">
             {selectedEvents.map((event) => {
               const userId = localStorage.getItem("userId");
               const isApplied = appliedEvents.includes(event.id);
