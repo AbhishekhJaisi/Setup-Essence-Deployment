@@ -122,6 +122,29 @@ const applyForEvent = async (req, res) => {
                 eventTitle: event.title,
                 applicantName: user.username,
                 applicantId: user.id,
+                type: 'SYSTEM',
+                tags: event.tag,
+                time: new Date().toISOString()
+            }
+        );
+
+        await createAndSendNotification(
+            user.id,
+            'Application submitted',
+            `You successfully applied for ${event.title}`,
+            {
+                from: {
+                    id: event.userId,
+                    name: event.organizer
+                },
+                to: {
+                    id: user.id
+                },
+                eventId: event.id,
+                eventTitle: event.title,
+                applicantName: user.username,
+                applicantId: user.id,
+                type: 'SYSTEM',
                 tags: event.tag,
                 time: new Date().toISOString()
             }

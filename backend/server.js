@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -25,7 +26,9 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_CORS,
+        origin: ["http://localhost:5173",
+            "http://192.168.5.129:5173",
+            "http://192.168.5.212:5173"],
         methods: ['GET', 'POST'],
         credentials: true
     }
@@ -61,8 +64,14 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 
 app.set('trust proxy', 1);
 
+app.use(helmet({
+    contentSecurityPolicy: false,
+}));
+
 app.use(cors({
-    origin: process.env.FRONTEND_CORS,
+    origin: ["http://localhost:5173",
+        "http://192.168.5.129:5173",
+        "http://192.168.5.212:5173"],
     credentials: true
 }));
 
