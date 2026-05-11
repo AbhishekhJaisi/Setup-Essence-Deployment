@@ -10,7 +10,6 @@ function EditProfileModal({
     country: "",
   });
   const [formError, setFormError] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -23,115 +22,129 @@ function EditProfileModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editProfileFormData.phone_number.length !== 10) {
-      setFormError("Phone number can only be 10 digits");
+      setFormError("Phone number must be exactly 10 digits");
       return;
     }
     setLoading(true);
-
     await handleEditProfile(editProfileFormData);
     setLoading(false);
   };
 
   const fields = [
-    { name: "phone_number", placeholder: "Phone number", type: "number" },
-    { name: "country", placeholder: "Country", type: "text" },
+    {
+      name: "phone_number",
+      label: "Phone Number",
+      placeholder: "10-digit number",
+      type: "number",
+    },
+    {
+      name: "country",
+      label: "Country",
+      placeholder: "Your country",
+      type: "text",
+    },
   ];
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) setShowEditForm(false);
       }}
     >
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden">
+      {/* Ambient glow behind modal */}
+      <div className="absolute w-[400px] h-[300px] rounded-full bg-violet-600/10 blur-[100px] pointer-events-none" />
+
+      <div className="relative w-full max-w-md bg-[#0e0e14] border border-white/[0.07] rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.7)] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06]">
           <div>
-            <h2 className="text-base font-semibold text-slate-900">
-              Edit profile
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-4 h-px bg-amber-400/50" />
+              <span className="text-[9px] tracking-[0.14em] uppercase text-amber-400/70">
+                Account
+              </span>
+            </div>
+            <h2 className="font-serif font-light text-[22px] text-[#f0ece3] leading-none">
+              Edit <span className="italic text-violet-400">profile</span>
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-[11px] text-white/25 mt-1">
               Update your personal information
             </p>
           </div>
           <button
             onClick={() => setShowEditForm(false)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-white/25 hover:text-white/60 hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] transition-all"
           >
             <svg
-              className="w-4 h-4"
+              className="w-3.5 h-3.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              strokeWidth={2}
+              strokeLinecap="round"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-3">
-          {fields.map(({ name, placeholder, type }) => (
+        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+          {fields.map(({ name, label, placeholder, type }) => (
             <div key={name}>
-              <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
-                {placeholder}
+              <label className="block text-[9px] tracking-[0.12em] uppercase text-white/30 mb-1.5">
+                {label}
               </label>
               <input
                 type={type}
                 name={name}
-                placeholder={`Enter your ${placeholder.toLowerCase()}`}
+                placeholder={placeholder}
                 onChange={handleChange}
                 value={editProfileFormData[name]}
-                className="w-full text-sm text-slate-800 placeholder-slate-300 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all"
+                className="w-full bg-white/[0.04] border border-white/[0.09] rounded-[9px] px-3.5 py-2.5 text-[13px] text-[#e8e3d8] placeholder-white/20 outline-none focus:border-violet-500/50 focus:bg-violet-500/[0.06] focus:ring-2 focus:ring-violet-500/10 transition-all"
               />
             </div>
           ))}
-          <p className="flex justify-center text-xs text-red-400">
-            {formError}
-          </p>
+
+          {formError && (
+            <p className="text-[11px] text-red-400/80 text-center">
+              {formError}
+            </p>
+          )}
 
           {/* Actions */}
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-2 pt-1">
             <button
               type="button"
               onClick={() => setShowEditForm(false)}
-              className="flex-1 py-2.5 text-sm font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-xl transition-all active:scale-95"
+              className="flex-1 py-2.5 text-[12px] text-white/40 border border-white/[0.08] hover:bg-white/[0.05] hover:text-white/65 rounded-xl transition-all active:scale-95"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 text-[12px] font-medium text-white bg-gradient-to-r from-violet-600 to-violet-400 shadow-[0_2px_16px_rgba(124,90,245,0.4)] hover:shadow-[0_4px_24px_rgba(124,90,245,0.55)] hover:-translate-y-px active:scale-[0.98] rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loading && (
-                <svg
-                  className="w-4 h-4 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
+              {loading ? (
+                <>
+                  <span
+                    className="w-1.5 h-1.5 rounded-full bg-white/70 animate-bounce"
+                    style={{ animationDelay: "0ms" }}
                   />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                  <span
+                    className="w-1.5 h-1.5 rounded-full bg-white/70 animate-bounce"
+                    style={{ animationDelay: "150ms" }}
                   />
-                </svg>
+                  <span
+                    className="w-1.5 h-1.5 rounded-full bg-white/70 animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
+                </>
+              ) : (
+                "Save changes"
               )}
-              {loading ? "Saving..." : "Save changes"}
             </button>
           </div>
         </form>

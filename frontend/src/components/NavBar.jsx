@@ -152,6 +152,20 @@ function NavBar() {
             onClick={() => setShowNotification(true)}
             className="relative w-[34px] h-[34px] rounded-[10px] bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/45 hover:text-white/75 hover:bg-white/[0.07] transition-all"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.7}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 0 1-5.714 0M18 8.25a6 6 0 1 0-12 0c0 7.372-3 8.25-3 8.25h18s-3-.878-3-8.25ZM13.73 21a2.25 2.25 0 0 1-3.46 0"
+              />
+            </svg>
             <i className="ti ti-bell text-[16px]" aria-hidden="true" />
             {unreadcount > 0 && (
               <span className="absolute -top-1 -right-1 min-w-[16px] h-4 rounded-full bg-amber-400 border-2 border-[#0e0e14] flex items-center justify-center text-[9px] font-semibold text-amber-900 px-1">

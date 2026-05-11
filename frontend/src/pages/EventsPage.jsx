@@ -116,6 +116,7 @@ function EventsPage() {
       });
       const data = await res.json();
       setEventsList(data.data);
+      console.log(data.data);
     } catch (err) {
       console.error(err);
     } finally {

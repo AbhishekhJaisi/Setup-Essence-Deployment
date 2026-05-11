@@ -92,15 +92,12 @@ function ProfilePage() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-2xl bg-[#0a0a0f]/80">
         <div className="max-w-3xl mx-auto px-6 h-[68px] flex items-center gap-3">
-          <div className="w-8 h-8 rounded-[8px] bg-gradient-to-br from-violet-500 to-amber-400 flex items-center justify-center text-white font-semibold text-base flex-shrink-0 select-none">
-            E
-          </div>
-          <div>
-            <h1 className="font-serif font-light text-[18px]  leading-none">
-              Eventful
+          <div className="justify-between">
+            <h1 className="font-serif ml-auto text-2xl leading-none">
+              Profile
             </h1>
             <p className="text-[9px] tracking-[0.1em] uppercase  mt-0.5">
-              Your Profile
+              manage profile
             </p>
           </div>
           <button
