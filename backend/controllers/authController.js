@@ -8,6 +8,7 @@ const { userLogActivity, creatorLogActivity } = require('../utils/logger');
 const { createAndSendNotification } = require('../utils/notificationHelper')
 const SECRET = process.env.JWT_SECRET;
 const sanitize = require('sanitize-html');
+const { clean, richText } = require('../utils/sanitize');
 
 const otpStore = {};
 
@@ -194,6 +195,7 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
     try {
+
         const { username, phone_number, bio, notifyEmail, notifyPush } = req.body;
 
         const user = await User.findByPk(req.user.id);
@@ -208,27 +210,32 @@ const updateProfile = async (req, res) => {
             bio: user.bio,
             notifyEmail: user.notifyEmail,
             notifyPush: user.notifyPush
-        }
+        };
+
+        const cleanUsername = clean(username);
+        const cleanPhone = clean(phone_number);
+        const cleanBio = clean(bio);
+
 
         await user.update({
-            username,
-            phone_number,
-            bio,
+            username: cleanUsername,
+            phone_number: cleanPhone,
+            bio: cleanBio,
             notifyEmail,
             notifyPush
         });
 
         const updatedFields = [];
 
-        if (oldData.username !== username) {
+        if (oldData.username !== cleanUsername) {
             updatedFields.push(`username from "${oldData.username}" to "${username}"`);
         }
 
-        if (oldData.phone_number !== phone_number) {
+        if (oldData.phone_number !== cleanPhone) {
             updatedFields.push(`phone number from "${oldData.phone_number}" to "${phone_number}"`);
         }
 
-        if (oldData.bio !== bio) {
+        if (oldData.bio !== cleanBio) {
             updatedFields.push(`bio from "${oldData.bio}" to "${bio}"`);
         }
 

@@ -1,4 +1,4 @@
-const sanitize = require('sanitize-html');
+const sanitizeHtml = require('sanitize-html');
 
 const plainText = { allowedTags: [], allowedAttributes: {} };
 const richText = { allowedTags: ['b', 'i', 'em', 'strong', 'ul', 'ol'], allowedAttributes: {} };

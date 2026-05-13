@@ -7,9 +7,11 @@ const { connectedUsers, getIO } = require('../utils/socketStore');
 const { Registration } = require('../models')
 const { createAndSendNotification } = require('../utils/notificationHelper');
 const { creatorLogActivity } = require('../utils/logger');
-const sanitize = require('sanitize-html');
 const fs = require('fs');
 const path = require('path');
+const sanitize = require('sanitize-html');
+const { clean, richText } = require('../utils/sanitize');
+
 
 
 const generateEventCode = () => {
@@ -455,9 +457,6 @@ const getMyEvents = async (req, res) => {
 const createEvent = async (req, res) => {
     try {
 
-        const plainText = { allowedTags: [], allowedAttributes: {} };
-        const richText = { allowedTags: ['b', 'i', 'em', 'strong', 'ul', 'ol'], allowedAttributes: {} };
-
         const {
             title, organizer, category, username,
             venueName, venueAddress, venueMapLink,
@@ -540,13 +539,59 @@ const updateEvent = async (req, res) => {
             return errorResponse(res, "Not authorized", 403);
         }
 
-        await event.update(req.body); // venue city date description
+        // await event.update(req.body); // venue city date description
+
 
         const registrations = await Registration.findAll({
             where: {
                 eventId: event.id,
                 status: { [Op.notIn]: ['cancelled'] }
             }
+        });
+
+        const {
+            title, organizer, category, username,
+            venueName, venueAddress, venueMapLink,
+            priceAmount, priceCurrency, isEarlyBird, eventTimeStart, eventTimeEnd, numberOfGuests,
+            capacityTotal, eventDate, city,
+            shortDescription, fullDescription,
+            agenda, prerequisites, tags, registrationDeadline, visibleFrom, bookingOpenDate
+        } = req.body;
+
+        const updateEvent = await event.update({
+            eventCode: generateEventCode(),
+            // --- plain text fields ---
+            title: clean(title),
+            organizer: clean(organizer),
+            category: clean(category),
+            username: clean(username),
+            venueName: clean(venueName),
+            venueAddress: clean(venueAddress),
+            city: clean(city),
+            prerequisites: clean(prerequisites),
+            tags: clean(tags),
+
+            // --- rich text fields (allow basic formatting) ---
+            shortDescription: clean(shortDescription, richText),
+            fullDescription: clean(fullDescription, richText),
+            agenda: clean(agenda, richText),
+
+            // --- these don't need sanitization, just pass through ---
+            venueMapLink,        // URL — validate separately if needed
+            priceAmount,         // number
+            priceCurrency,       // number/code
+            isEarlyBird,         // boolean
+            eventTimeStart,      // date
+            eventTimeEnd,        // date
+            numberOfGuests,      // number
+            capacityTotal,       // number
+            capacityRemaining: capacityTotal,
+            eventDate,           // date
+            registrationDeadline,
+            visibleFrom,
+            bookingOpenDate,
+            fileUpload,
+            userId: req.user.id
         });
 
         for (const reg of registrations) {
@@ -578,11 +623,7 @@ const updateEvent = async (req, res) => {
             role: req.user.role
         });
 
-        // `Hi ${user.username}, your application for ${event.title} has been ${status}`
-
-        // creatorLogActivity(req, event, 'EVENT INFORMATION UPDATED', req.user.role);
-
-        return successResponse(res, 'Event updated successfully', event);
+        return successResponse(res, 'Event updated successfully', updateEvent);
 
     } catch (err) {
         return errorResponse(res, `Internal Server Error: ${err.message}`);
