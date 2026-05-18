@@ -88,6 +88,7 @@
  *       200:
  *         description: Application cancelled successfully
  */
+
 /**
  * @swagger
  * /api/registrations/event/{eventId}/applicants:

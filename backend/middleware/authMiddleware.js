@@ -9,14 +9,14 @@ const verifyToken = async (req, res, next) => {
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401).json({ message: "No token, access denied" });
+            return errorResponse(res, `No token, access denied: ${err.message}`);
         }
 
         const token = authHeader.split(" ")[1];
 
         // optional blacklist check
         if (blackListedTokens.has(token)) {
-            return res.status(401).json({ message: "Token expired, login again" });
+            return errorResponse(res, `Token expired, login again: ${err.message}`);
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -30,7 +30,7 @@ const verifyToken = async (req, res, next) => {
         });
 
         if (!user) {
-            return res.status(401).json({ message: "Account no longer active" });
+            return errorResponse(res, `Account no longer active: ${err.message}`);
         }
 
         console.log("TOKEN:", token);
@@ -40,7 +40,7 @@ const verifyToken = async (req, res, next) => {
         next();
 
     } catch (err) {
-        return res.status(401).json({ message: "Invalid or expired token" });
+        return errorResponse(res, `Invalid or expired token: ${err.message}`);
     }
 };
 

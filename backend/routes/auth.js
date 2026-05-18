@@ -257,7 +257,7 @@ const upload = require('../utils/upload');
 
 router.post('/register', validate(registerSchema), registerLimiter, register);
 router.get('/user', user);
-router.post('/login', loginLimiter, login);
+router.post('/login', validate(loginSchema), loginLimiter, login);
 router.get('/profile', verifyToken, getProfile);
 router.put('/profile/update', verifyToken, validate(updateProfileSchema), updateProfile);
 router.post('/logout', verifyToken, logout);

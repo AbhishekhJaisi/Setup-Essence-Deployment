@@ -15,12 +15,15 @@ const { connectedUsers, setIO } = require('./utils/socketStore');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger/swagger');
 const logsRouter = require('./routes/logs');
+const errorHandler = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/event');
 const notificationRoutes = require('./routes/notification');
 
 const app = express();
+
+
 
 const server = http.createServer(app);
 
@@ -31,6 +34,7 @@ const io = new Server(server, {
         credentials: true
     }
 });
+
 
 setIO(io);
 
@@ -86,6 +90,10 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/logs', logsRouter);
 
 
+app.use(errorHandler);
+
+
+
 app.get('/', (req, res) => {
     res.send('Server is working');
 });
@@ -97,13 +105,16 @@ startEventReminder();
 
 const PORT = process.env.PORT || 4000;
 
+
 db.sequelize.authenticate()
     .then(() => {
         console.log('DB connected');
         return db.sequelize.sync({ logging: false });
     })
     .then(() => {
+
         console.log('Tables synced');
+
         server.listen(PORT, "0.0.0.0", () => {
             console.log(`Server running at http://localhost:${PORT}`);
         });

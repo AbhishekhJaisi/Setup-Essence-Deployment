@@ -9,6 +9,7 @@ const { createAndSendNotification } = require('../utils/notificationHelper')
 const SECRET = process.env.JWT_SECRET;
 const sanitize = require('sanitize-html');
 const { clean, richText } = require('../utils/sanitize');
+const errorHandler = require('../middleware/errorHandler');
 
 const otpStore = {};
 
@@ -32,19 +33,22 @@ const user = async (req, res) => {
     }
 }
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     try {
-        const plainText = { allowedTags: [], allowedAttributes: {} };
-        const richText = { allowedTags: ['b', 'i', 'em', 'strong', 'ul', 'ol'], allowedAttributes: {} };
 
         const { username, email, password, phone_number, role } = req.body;
 
         if (!username || !email || !password || !role) {
-            return errorResponse(res, "Username, Email, Password and role required", 400)
+            const error = new Error("Username, Email, Password and role required");
+            error.statusCode;
+            throw error;
+            // return errorResponse(res, "Username, Email, Password and role required", 400)
         }
 
         if (!['user', 'creator'].includes(role)) {
-            return errorResponse(res, "Role must either be user or creator!", 400)
+            const error = new Error("Role must either be user or creator!");
+            error.statusCode;
+            throw error;
         }
         // check if user exists in AIVEN (not the array)
         const existingUser = await User.findOne(
@@ -53,11 +57,15 @@ const register = async (req, res) => {
             });
 
         if (existingUser) {
-            return errorResponse(res, "User already registered", 400);
+            const error = new Error("User already registered");
+            error.statusCode;
+            throw error;
         }
 
         if (password.length < 6) {
-            return errorResponse(res, "Password should be of at least 6 character", 400);
+            const error = new Error("Password must be of at least 6 character");
+            error.statusCode;
+            throw error;
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -70,7 +78,6 @@ const register = async (req, res) => {
             role: clean(role)
         });
 
-        console.log("User saved to Aiven!");
 
         await createAndSendNotification(
             newUser.id,
@@ -91,6 +98,7 @@ const register = async (req, res) => {
             user: {
                 id: newUser.id,
                 username: newUser.username,
+                email: newUser.email,
                 phone_number,
                 role
             },
@@ -99,41 +107,48 @@ const register = async (req, res) => {
     }
 
     catch (err) {
-        console.error(err);  // full error with details
-        console.error(err.errors);  // ← add this, shows exact field causing validation error
-        return errorResponse(res, `Internal Server Error: ${err.message}`, 500);
+        next(err);
     }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
-        const plainText = { allowedTags: [], allowedAttributes: {} };
-        const richText = { allowedTags: ['b', 'i', 'em', 'strong', 'ul', 'ol'], allowedAttributes: {} };
 
         const { email, password, rememberMe } = req.body;
 
-        const cleanEmail = email?.trim().toLowerCase();
-
-        const requiredFields = { email, password };
-
-        for (const [key, value] of Object.entries(requiredFields)) {
-            if (!value) {
-                return errorResponse(res, `${key} is mising, please enter`, 400)
-            }
+        if (!email || !password) {
+            const error = new Error("Email, Password required");
+            error.statusCode;
+            throw error;
         }
+
+        // // const cleanEmail = email?.trim().toLowerCase();
+        // const requiredFields = { email, password };
+
+        // for (const [key, value] of Object.entries(requiredFields)) {
+        //     if (!value) {
+        //         const error = new Error(`${key} is mising, please enter`);
+        //         error.statusCode;
+        //         throw error;
+        //     }
+        // }
 
         const user = await User.findOne(
             {
-                where: { email: cleanEmail, isDeleted: false }
+                where: { email, isDeleted: false }
             });
 
         if (!user) {
-            return errorResponse(res, "User not found", 404)
+            const error = new Error("User not found");
+            error.statusCode;
+            throw error;
         }
 
         const isMatched = await bcrypt.compare(password, user.password);
         if (!isMatched) {
-            return errorResponse(res, "Invalid password", 401)
+            const error = new Error("Invalid password");
+            error.statusCode;
+            throw error;
         }
 
         const token = jwt.sign(
@@ -162,7 +177,7 @@ const login = async (req, res) => {
     }
 
     catch (err) {
-        return errorResponse(res, err.message)
+        next(err);
     }
 };
 
@@ -585,6 +600,40 @@ const deleteUser = async (req, res) => {
         return errorResponse(res, `Internal Server Error: ${err.message}`, 500);
     }
 };
+
+
+// const login = catchAsync(async (req, res) => {
+//     const { email, password, rememberMe } = req.body;
+//     const cleanEmail = email?.trim().toLowerCase();
+
+//     // Validation
+//     const requiredFields = { email, password };
+//     for (const [key, value] of Object.entries(requiredFields)) {
+//         if (!value) throw new AppError(`${key} is missing, please enter`, 400);
+//     }
+
+//     // User check
+//     const user = await User.findOne({ where: { email: cleanEmail, isDeleted: false } });
+//     if (!user) throw new AppError("User not found", 404);
+
+//     // Password check
+//     const isMatched = await bcrypt.compare(password, user.password);
+//     if (!isMatched) throw new AppError("Invalid password", 401);
+
+//     // Token
+//     const token = jwt.sign(
+//         { id: user.id, role: user.role, email: user.email },
+//         process.env.JWT_SECRET,
+//         { expiresIn: rememberMe ? "7d" : "1h" }
+//     );
+
+//     await userLogActivity(req, user, "LOGIN", user.role);
+
+//     return successResponse(res, "Logged in successfully", {
+//         user: { id: user.id, username: user.username, email: user.email, role: user.role },
+//         token,
+//     });
+// });
 
 module.exports = { register, user, login, getProfile, logout, updateProfile, onBoardUser, forgotPassword, verifyOtp, resetPassword, deleteUser, blackListedTokens };
 

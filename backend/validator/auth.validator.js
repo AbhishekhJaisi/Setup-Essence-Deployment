@@ -9,9 +9,10 @@ const registerSchema = Joi.object({
     phone_number: Joi.number().min(10).required()
 });
 
+
 const loginSchema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().required()
+    password: Joi.string().min(6).required(),
 });
 
 const updateProfileSchema = Joi.object({
@@ -31,11 +32,11 @@ const verifyOtpSchema = Joi.object({
     otp: Joi.number().min(6).required()
 });
 
-const resetPassword = Joi.object({
+const resetPasswordSchema = Joi.object({
     email: Joi.string().email().required(),
     newPassword: Joi.string().min(6).required(),
     confirmPassword: Joi.string().min(6).required(),
 });
 
 
-module.exports = { registerSchema, loginSchema, updateProfileSchema, forgotPasswordSchema, verifyOtpSchema, resetPassword };
+module.exports = { registerSchema, loginSchema, updateProfileSchema, forgotPasswordSchema, verifyOtpSchema, resetPasswordSchema };

@@ -4,7 +4,7 @@ const validate = (schema) => (req, res, next) => {
     if (error) {
         return res.status(400).json({
             success: false,
-            errors: error.details.map(e => e.message)
+            errors: error.details.map(e => e.message).join(", ")
         });
     }
 
@@ -12,5 +12,3 @@ const validate = (schema) => (req, res, next) => {
 }
 
 module.exports = validate;
-
-// POST /clubs (create club)✅POST /events (create event)✅PUT /events/:id (update)✅POST /forgot-password✅POST /reset-password✅
