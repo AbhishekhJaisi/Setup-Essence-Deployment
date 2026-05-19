@@ -135,3 +135,6 @@ const deleteNotification = async (req, res) => {
 }
 
 module.exports = { getAllNotifications, getUnreadCount, markAsRead, markAllAsRead, deleteNotification, getUnreadNotifications };
+
+
+

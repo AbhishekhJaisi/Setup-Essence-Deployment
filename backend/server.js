@@ -21,6 +21,7 @@ const { connectRedis } = require('./config/redisClient');
 const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/event');
 const notificationRoutes = require('./routes/notification');
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 
@@ -55,7 +56,6 @@ io.on('connection', (socket) => { // real time notifications
     });
 });
 
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     customSiteTitle: 'Event Management API Docs',
     customCss: '.swagger-ui .topbar {background-color:  #1a1a2e}'
@@ -85,6 +85,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/logs', logsRouter);
+app.use('/api', chatRoutes);
 
 app.use(errorHandler);
 
@@ -99,12 +100,34 @@ startEventReminder();
 
 const PORT = process.env.PORT || 4000;
 
+// const startServer = async () => {
+//     try {
+//         await db.sequelize.authenticate();
+//         console.log("DB connected");
+
+//         await connectRedis();
+//         console.log("Redis connected");
+
+//         await db.sequelize.sync({ logging: false });
+
+//         server.listen(PORT, "0.0.0.0", () => {
+//             console.log(`Server running at http://localhost:${PORT}`);
+//         });
+//     }
+//     catch (err) {
+//         console.log(`Startup error: ${err.message}`);
+//     }
+// };
+
 const startServer = async () => {
     try {
         await db.sequelize.authenticate();
         console.log("DB connected");
 
-        await connectRedis();
+        // Redis won't block server startup now
+        connectRedis().catch((err) => {
+            console.log("Redis failed, continuing without it:", err.message);
+        });
 
         await db.sequelize.sync({ logging: false });
 
@@ -118,56 +141,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-// db.sequelize.authenticate()
-//     .then(() => {
-//         console.log('DB connected');
-
-//         return connectRedis();
-//     })
-//     .then(() => {
-//         console.log("Redis connected");
-//         return db.sequelize.sync({ logging: false });
-//     })
-//     .then(() => {
-
-//         server.listen(PORT, "0.0.0.0", () => {
-//             console.log(`Server running at http://localhost:${PORT}`);
-//         });
-//     })
-//     .catch((err) => {
-//         console.error('Startup error:', err.message);
-//     });
-
-
-
-
-// const session = require('express-session');
-// const pgSession = require('connect-pg-simple')(session);
-// const { autoLogout } = require('./middleware/authMiddleware');
-// const pgPool = new pg.Pool({
-//     host: process.env.DB_HOST,
-//     port: process.env.DB_PORT,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     database: process.env.DB_NAME,
-//     ssl: {
-//         rejectUnauthorized: false
-//     }
-// });
-
-// app.use(session({
-//     store: new pgSession({
-//         pool: pgPool,
-//         tableName: 'session'
-//     }),
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         httpOnly: true,
-//         secure: false,
-//         sameSite: 'none',
-//         maxAge: 1000 * 60 * 60
-//     }
-// }));

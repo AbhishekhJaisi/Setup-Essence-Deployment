@@ -2,20 +2,30 @@ require('dotenv').config();
 const { createClient } = require('redis');
 
 const redisClient = createClient({
-    url: process.env.REDIS_URL || "redis://localhost:6379",
+    url: process.env.REDIS_URL,
+    socket: {
+        rejectUnauthorized: false  // required for cloud Redis providers
+    }
 });
 
 redisClient.on("connect", () => {
-    console.log("Redis connected");
+    console.log("Redis connecting...");
 });
 
-redisClient.on("error", () => {
-    console.log("Redis error", err);
+redisClient.on("ready", () => {
+    console.log("Redis connected successfully");
+});
+
+redisClient.on("error", (err) => {
+    console.log("Redis error:", err);
 });
 
 const connectRedis = async () => {
     if (!redisClient.isOpen) {
         await redisClient.connect();
+
+        const pong = await redisClient.ping();
+        console.log("Redis PING:", pong);
     }
 };
 
