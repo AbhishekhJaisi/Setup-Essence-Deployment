@@ -21,7 +21,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "http://192.168.5.165:5173",
+        origin: process.env.ALLOWED_ORIGINS.split(','),
         methods: ['GET', 'POST'],
         credentials: true
     }
@@ -51,7 +51,7 @@ io.on('connection', (socket) => { // real time notifications
 app.set('trust proxy', 1);
 
 app.use(cors({
-    origin: "http://192.168.5.165:5173",
+    origin: process.env.ALLOWED_ORIGINS.split(','),
     credentials: true
 }));
 
