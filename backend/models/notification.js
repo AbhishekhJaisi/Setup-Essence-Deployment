@@ -8,10 +8,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     type: {
       type: DataTypes.ENUM(
+        'NEW_REGISTRATION',
         'NEW_APPLICATION',
+        'APPLICATION_SUBMITTED',
         'APPLICATION_STATUS_UPDATED',
         'EVENT_UPDATED',
-        'EVENT_DELETED'
+        'EVENT_DELETED',
+        'PROFILE_UPDATED',
+        'PASSWORD_RESET',
+        'ACCOUNT_DELETED'
       ),
       allowNull: false
     },

@@ -2,17 +2,24 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn('Events', 'registrationDeadline', {
-      type: Sequelize.DATE,
-      allowNull: true
-    });
+    const table = await queryInterface.describeTable('Events');
+
+    if (!table.registrationDeadline) {
+      await queryInterface.addColumn('Events', 'registrationDeadline', {
+        type: Sequelize.DATE,
+        allowNull: true
+      });
+    }
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Events', 'registrationDeadline');
+    const table = await queryInterface.describeTable('Events');
+
+    if (table.registrationDeadline) {
+      await queryInterface.removeColumn('Events', 'registrationDeadline');
+    }
   }
 };
-
 
 
 

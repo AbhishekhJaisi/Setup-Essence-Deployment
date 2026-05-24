@@ -2,20 +2,33 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn('Users', 'isDeleted', {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
-      allowNull: false
-    });
+    const table = await queryInterface.describeTable('Users');
 
-    await queryInterface.addColumn('Users', 'deletedAt', {
-      type: Sequelize.DATE,
-      allowNull: true
-    });
+    if (!table.isDeleted) {
+      await queryInterface.addColumn('Users', 'isDeleted', {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
+      });
+    }
+
+    if (!table.deletedAt) {
+      await queryInterface.addColumn('Users', 'deletedAt', {
+        type: Sequelize.DATE,
+        allowNull: true
+      });
+    }
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Users', 'isDeleted');
-    await queryInterface.removeColumn('Users', 'deletedAt');
+    const table = await queryInterface.describeTable('Users');
+
+    if (table.isDeleted) {
+      await queryInterface.removeColumn('Users', 'isDeleted');
+    }
+
+    if (table.deletedAt) {
+      await queryInterface.removeColumn('Users', 'deletedAt');
+    }
   }
 };

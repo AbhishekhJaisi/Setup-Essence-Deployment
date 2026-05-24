@@ -2,7 +2,12 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.dropTable('session').catch(() => { });
+    const tables = await queryInterface.showAllTables();
+
+    if (tables.includes('session')) {
+      await queryInterface.dropTable('session');
+    }
+
     await queryInterface.createTable('session', {
       sid: {
         type: Sequelize.STRING,
@@ -21,6 +26,10 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('session');
+    const tables = await queryInterface.showAllTables();
+
+    if (tables.includes('session')) {
+      await queryInterface.dropTable('session');
+    }
   }
 };

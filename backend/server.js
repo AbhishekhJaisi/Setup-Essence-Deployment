@@ -26,13 +26,48 @@ const chatRoutes = require('./routes/chatRoutes');
 const app = express();
 
 const server = http.createServer(app);
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean);
+
+const corsOptions = {
+    origin(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
+    credentials: true
+};
+
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "http://192.168.225.14:5173"
+// ];
+
+// const io = new Server(server, {
+//     cors: {
+//         origin: process.env.ALLOWED_ORIGINS,
+//         methods: ['GET', 'POST'],
+//         credentials: true
+//     }
+// });
 
 const io = new Server(server, {
-    cors: {
-        origin: process.env.ALLOWED_ORIGINS.split(','),
-        methods: ['GET', 'POST'],
-        credentials: true
-    }
+  cors: {
+    origin: (origin, callback ) => {
+      // Check if the request origin is in our allowed list
+      if (!origin || process.env.ALLOWED_ORIGINS?.split(',').includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
 
 setIO(io);
@@ -71,10 +106,7 @@ app.use(
     })
 );
 
-app.use(cors({
-    origin: process.env.ALLOWED_ORIGINS.split(','),
-    credentials: true
-}));
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -129,7 +161,7 @@ const startServer = async () => {
             console.log("Redis failed, continuing without it:", err.message);
         });
 
-        await db.sequelize.sync({ logging: false });
+        // await db.sequelize.sync({ alter: true, logging: console.log });
 
         server.listen(PORT, "0.0.0.0", () => {
             console.log(`Server running at http://localhost:${PORT}`);

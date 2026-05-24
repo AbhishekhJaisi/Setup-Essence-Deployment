@@ -2,6 +2,8 @@ const { Notification } = require('../models');
 const { successResponse, errorResponse } = require('../utils/responseHelper');
 const { redisClient } = require('../config/redisClient');
 
+// npx sequelize-cli migration:generate --name create-product
+
 const getAllNotifications = async (req, res) => {
     try {
         const notifications = await Notification.findAll(

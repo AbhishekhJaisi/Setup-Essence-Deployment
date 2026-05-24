@@ -2,6 +2,12 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const tables = await queryInterface.showAllTables();
+
+    if (tables.includes('Notifications')) {
+      return;
+    }
+
     await queryInterface.createTable('Notifications', {
       id: {
         allowNull: false,
@@ -50,6 +56,10 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Notifications');
+    const tables = await queryInterface.showAllTables();
+
+    if (tables.includes('Notifications')) {
+      await queryInterface.dropTable('Notifications');
+    }
   }
 };

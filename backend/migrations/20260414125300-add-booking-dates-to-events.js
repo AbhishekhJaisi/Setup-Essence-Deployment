@@ -2,19 +2,32 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn('Events', 'visibleFrom', {
-      type: Sequelize.DATE,
-      allowNull: true
-    });
+    const table = await queryInterface.describeTable('Events');
 
-    await queryInterface.addColumn('Events', 'bookingOpenDate', {
-      type: Sequelize.DATE,
-      allowNull: true
-    });
+    if (!table.visibleFrom) {
+      await queryInterface.addColumn('Events', 'visibleFrom', {
+        type: Sequelize.DATE,
+        allowNull: true
+      });
+    }
+
+    if (!table.bookingOpenDate) {
+      await queryInterface.addColumn('Events', 'bookingOpenDate', {
+        type: Sequelize.DATE,
+        allowNull: true
+      });
+    }
   },
 
   async down(queryInterface) {
-    await queryInterface.removeColumn('Events', 'visibleFrom');
-    await queryInterface.removeColumn('Events', 'bookingOpenDate');
+    const table = await queryInterface.describeTable('Events');
+
+    if (table.visibleFrom) {
+      await queryInterface.removeColumn('Events', 'visibleFrom');
+    }
+
+    if (table.bookingOpenDate) {
+      await queryInterface.removeColumn('Events', 'bookingOpenDate');
+    }
   }
 };

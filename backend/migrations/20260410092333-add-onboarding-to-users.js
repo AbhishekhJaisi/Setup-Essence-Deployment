@@ -1,44 +1,60 @@
 'use strict';
 
+const addColumnIfMissing = async (queryInterface, Sequelize, tableName, columnName, definition) => {
+  const table = await queryInterface.describeTable(tableName);
+
+  if (!table[columnName]) {
+    await queryInterface.addColumn(tableName, columnName, definition);
+  }
+};
+
+const removeColumnIfExists = async (queryInterface, tableName, columnName) => {
+  const table = await queryInterface.describeTable(tableName);
+
+  if (table[columnName]) {
+    await queryInterface.removeColumn(tableName, columnName);
+  }
+};
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn('Users', 'dob', {
+    await addColumnIfMissing(queryInterface, Sequelize, 'Users', 'dob', {
       type: Sequelize.DATE,
       allowNull: true
     });
-    await queryInterface.addColumn('Users', 'country', {
+    await addColumnIfMissing(queryInterface, Sequelize, 'Users', 'country', {
       type: Sequelize.STRING,
       allowNull: true
     });
-    await queryInterface.addColumn('Users', 'city', {
+    await addColumnIfMissing(queryInterface, Sequelize, 'Users', 'city', {
       type: Sequelize.STRING,
       allowNull: true
     });
-    await queryInterface.addColumn('Users', 'address', {
+    await addColumnIfMissing(queryInterface, Sequelize, 'Users', 'address', {
       type: Sequelize.TEXT,
       allowNull: true
     });
-    await queryInterface.addColumn('Users', 'interests', {
+    await addColumnIfMissing(queryInterface, Sequelize, 'Users', 'interests', {
       type: Sequelize.JSON,
       allowNull: true
     });
-    await queryInterface.addColumn('Users', 'profilePicture', {
+    await addColumnIfMissing(queryInterface, Sequelize, 'Users', 'profilePicture', {
       type: Sequelize.STRING,
       allowNull: true
     });
-    await queryInterface.addColumn('Users', 'isOnBoarded', {
+    await addColumnIfMissing(queryInterface, Sequelize, 'Users', 'isOnBoarded', {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     });
   },
 
   async down(queryInterface) {
-    await queryInterface.removeColumn('Users', 'dob');
-    await queryInterface.removeColumn('Users', 'country');
-    await queryInterface.removeColumn('Users', 'city');
-    await queryInterface.removeColumn('Users', 'address');
-    await queryInterface.removeColumn('Users', 'interests');
-    await queryInterface.removeColumn('Users', 'profilePicture');
-    await queryInterface.removeColumn('Users', 'isOnBoarded');
+    await removeColumnIfExists(queryInterface, 'Users', 'dob');
+    await removeColumnIfExists(queryInterface, 'Users', 'country');
+    await removeColumnIfExists(queryInterface, 'Users', 'city');
+    await removeColumnIfExists(queryInterface, 'Users', 'address');
+    await removeColumnIfExists(queryInterface, 'Users', 'interests');
+    await removeColumnIfExists(queryInterface, 'Users', 'profilePicture');
+    await removeColumnIfExists(queryInterface, 'Users', 'isOnBoarded');
   }
 };

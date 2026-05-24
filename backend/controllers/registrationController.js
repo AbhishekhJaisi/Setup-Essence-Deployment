@@ -130,7 +130,7 @@ const applyForEvent = async (req, res) => {
 
         await createAndSendNotification(
             user.id,
-            'Application submitted',
+            'APPLICATION_SUBMITTED',
             `You successfully applied for ${event.title}`,
             {
                 from: {
